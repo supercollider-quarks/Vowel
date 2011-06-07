@@ -35,8 +35,9 @@ span.s5 {color: #0027cb}
 span.s6 {color: #737373}
 span.s7 {color: #cd1c00}
 span.s8 {font: 12.0px Helvetica}
-span.s9 {font: 9.0px Monaco}
-span.s10 {font: 12.0px Helvetica; color: #000000}
+span.s9 {color: #0024b8}
+span.s10 {font: 9.0px Monaco}
+span.s11 {font: 12.0px Helvetica; color: #000000}
 span.Apple-tab-span {white-space:pre}
 </style>
 </head>
@@ -64,8 +65,8 @@ span.Apple-tab-span {white-space:pre}
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
 <p class="p5"><span class="s4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// Create analyzer in a window you might want to see the spectrum of your vowels</p>
 <p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>(</p>
-<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>w = <span class="s5">SCWindow</span>(<span class="s6">"Frequency Spectrum"</span>, <span class="s5">Rect</span>(0, 0, 300, 200)); <span class="s7">// width should be 511</span></p>
-<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>f = <span class="s5">SCFreqScope</span>(w, w.view.bounds);</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>w = <span class="s5">Window</span>(<span class="s6">"Frequency Spectrum"</span>, <span class="s5">Rect</span>(0, 0, 300, 200)); <span class="s7">// width should be 511</span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>f = <span class="s5">FreqScopeView</span>(w, w.view.bounds);</p>
 <p class="p5"><span class="s4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>f.active_(</span><span class="s5">true</span><span class="s4">); <span class="Apple-tab-span">	</span></span>// turn it on the first time;</p>
 <p class="p5"><span class="s4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>f.dbRange_(100); <span class="Apple-tab-span">	</span></span>// turn it on the first time;</p>
 <p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>w.onClose_({ f.kill }); <span class="s7">// you must have this</span></p>
@@ -76,9 +77,9 @@ span.Apple-tab-span {white-space:pre}
 <p class="p7"><br></p>
 <p class="p8"><b><span class="Apple-tab-span">	</span>*new (vowel, register)</b></p>
 <p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
-<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>creates a new instance of <span class="s5">Vowel</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>creates a new instance of Vowel</p>
 <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>vowel </b>- selecty a vowel by the symbols <span class="s3">\a</span>, <span class="s3">\e</span>, <span class="s3">\i</span>, <span class="s3">\o</span>, <span class="s3">\u</span>. default value is <span class="s3">'a'</span>.</p>
-<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>register </b>- select a register by the symbols <span class="s3">\bass</span>, <span class="s3">\tenor</span>, <span class="s3">\counterTenor</span>, <span class="s3">\alto</span>, <span class="s3">\soprano</span>. <span class="s5">Default</span> value is <span class="s3">'bass'</span>.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>register </b>- select a register by the symbols <span class="s3">\bass</span>, <span class="s3">\tenor</span>, <span class="s3">\counterTenor</span>, <span class="s3">\alto</span>, <span class="s3">\soprano</span>. Default value is <span class="s3">'bass'</span>.</p>
 <p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
 <p class="p11"><span class="s4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span><span class="s5">Vowel</span><span class="s4">(); </span>// defaults to A bass</p>
 <p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s5">Vowel</span>(<span class="s3">\a</span>, <span class="s3">\bass</span>);<span class="Apple-converted-space"> </span></p>
@@ -137,11 +138,13 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8"><b><span class="Apple-tab-span">	</span>save(path, timbre, register)</b></p>
 <p class="p7"><span class="Apple-tab-span">	</span></p>
 <p class="p12"><span class="Apple-tab-span">	</span>v = <span class="s5">Vowel</span>.compose([<span class="s3">\a</span>,<span class="s3">\e</span>], [<span class="s3">\bass</span>, <span class="s3">\tenor</span>], [1,1].normalizeSum )<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
-<p class="p12"><span class="Apple-tab-span">	</span>v.save(<span class="s5">Document</span>.current.dir++<span class="s6">"/myVowelLibrary.sc"</span>, <span class="s3">\timbre0</span>, <span class="s3">\register0</span>)</p>
+<p class="p12"><span class="Apple-tab-span">	</span>v.save(<span class="s9">Platform</span>.userAppSupportDir++<span class="s6">"/myVowelLibrary.scd"</span>, <span class="s3">\timbre0</span>, <span class="s3">\register0</span>)</p>
 <p class="p7"><span class="Apple-tab-span">	</span></p>
 <p class="p8"><b><span class="Apple-tab-span">	</span>*load(path)</b></p>
-<p class="p12"><span class="Apple-tab-span">	</span><span class="s5">Vowel</span>.load(<span class="s5">Document</span>.current.dir++<span class="s6">"/myVowelLibrary.sc"</span>)</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="s5">Vowel</span>.load(<span class="s9">Platform</span>.userAppSupportDir++<span class="s6">"/myVowelLibrary.scd"</span>)</p>
 <p class="p13"><span class="s4"><span class="Apple-tab-span">	</span></span><span class="s5">Vowel</span><span class="s4">( </span>\timbre0<span class="s4">, </span>\register0<span class="s4">)</span></p>
+<p class="p7"><br></p>
+<p class="p7"><span class="Apple-tab-span">	</span></p>
 <p class="p7"><span class="Apple-tab-span">	</span></p>
 <p class="p15"><b>Accessing Instance variables</b></p>
 <p class="p9"><span class="Apple-tab-span">	</span></p>
@@ -154,13 +157,13 @@ span.Apple-tab-span {white-space:pre}
 <p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>v.freqs</p>
 <p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>v.freqs_({<span class="s5">|i|</span> 100 * (i+1) }!5)</p>
 <p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>v.freqs</p>
-<p class="p9"><span class="s9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p9"><span class="s10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
 <p class="p8"><b><span class="Apple-tab-span">	</span>dBs_(arg1)</b></p>
 <p class="p8"><b><span class="Apple-tab-span">	</span>dBs</b></p>
 <p class="p9"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>array of <b>dBs </b>for each vowel of a certain register</p>
 <p class="p9"><br></p>
-<p class="p13"><span class="s10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span><span class="s4">v = </span><span class="s5">Vowel</span><span class="s4">(</span>\u<span class="s4">, </span>\counterTenor<span class="s4">)</span></p>
+<p class="p13"><span class="s11"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span><span class="s4">v = </span><span class="s5">Vowel</span><span class="s4">(</span>\u<span class="s4">, </span>\counterTenor<span class="s4">)</span></p>
 <p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>v.dBs</p>
 <p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>v.dBs_({<span class="s5">|i|</span> -10 * (i) }!5)</p>
 <p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>v.dBs</p>
@@ -184,7 +187,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p12"><span class="s8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>v.asArray</p>
 <p class="p7"><span class="Apple-tab-span">	</span></p>
 <p class="p7"><span class="Apple-tab-span">	</span></p>
-<p class="p8"><span class="s9"><span class="Apple-tab-span">	</span></span><b>addFormants(freq, dB, width)<span class="Apple-converted-space"> </span></b></p>
+<p class="p8"><span class="s10"><span class="Apple-tab-span">	</span></span><b>addFormants(freq, dB, width)<span class="Apple-converted-space"> </span></b></p>
 <p class="p8"><b><span class="Apple-tab-span">	</span>removeFormant(index)</b></p>
 <p class="p7"><span class="Apple-tab-span">	</span></p>
 <p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>~v = <span class="s5">Vowel</span>()</p>
@@ -273,7 +276,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p11"><span class="s4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// refFormant = 4 loud on the right</p>
 <p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{<span class="s5">Formants</span>.ar(100, <span class="s5">Vowel</span>().brightenRel(<span class="s5">MouseX</span>.kr(0, 2), 4 )) * 0.1}.play</p>
 <p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
-<p class="p8"><span class="s9"><span class="Apple-tab-span">	</span></span><b>brightenLin (bright , refFormant<span class="Apple-converted-space">  </span>)</b></p>
+<p class="p8"><span class="s10"><span class="Apple-tab-span">	</span></span><b>brightenLin (bright , refFormant<span class="Apple-converted-space">  </span>)</b></p>
 <p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
 <p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>brighten allows you to lift the upper formants by multiplying their dBs. the sum of all dBs remains constant.</p>
 <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>bright </b>- coefficient to brighten the vowel. Default value is 1 (no change). do not use very big values (typically between 0 and 3).</p>
@@ -384,7 +387,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{<span class="s5">Formants</span>.ar(70, <span class="s5">Vowel</span>(<span class="s3">\e</span>), widthMods: <span class="s5">SinOsc</span>.kr(1,0,0.99,1) )}.play;<span class="Apple-converted-space"> </span></p>
 <p class="p12"><span class="s8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>{<span class="s5">Formants</span>.ar(70, <span class="s5">Vowel</span>(<span class="s3">\e</span>), widthMods: [<span class="s5">SinOsc</span>.kr(1,0,0.99,1), <span class="s5">SinOsc</span>.kr(1.1,0,0.99,1), <span class="s5">SinOsc</span>.kr(1.2,0,0.99,1), <span class="s5">SinOsc</span>.kr(1.3,0,0.99,1), <span class="s5">SinOsc</span>.kr(1.4,0,0.99,1) ] )}.play;<span class="Apple-converted-space"> </span></p>
 <p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
-<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>all together now:<span class="s9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>all together now:<span class="s10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span></p>
 <p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
 <p class="p12"><span class="s8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>{<span class="s5">Formants</span>.ar(70, <span class="s5">Vowel</span>(<span class="s3">\e</span>), freqMods: <span class="s5">SinOsc</span>.kr(1,0,0.1,1),<span class="Apple-converted-space">  </span>ampMods: <span class="s5">SinOsc</span>.kr(1.1,0,0.5,1),<span class="Apple-converted-space">  </span>widthMods: <span class="s5">SinOsc</span>.kr(1.2,0,0.999,1) )}.play;<span class="Apple-converted-space"> </span></p>
 <p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>

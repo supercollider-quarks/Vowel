@@ -450,9 +450,7 @@ Formants {
 	}
 	
 	*ar {|baseFreq = 100, vowel, freqMods = 1, ampMods = 1, widthMods = 1, unfold = false|
-		^[baseFreq, vowel, [freqMods], [ampMods], [widthMods]].flop
-			//.postcs
-		.collect({ |inputs|
+		^[baseFreq, vowel, [freqMods], [ampMods], [widthMods]].flop.collect({ |inputs|
 			this.ar1(*(inputs ++ unfold));
 		}).unbubble;		
 	}
@@ -510,9 +508,7 @@ BPFStack {
 	}
 	
 	*ar {|in, vowel, freqMods = 1, ampMods = 1, widthMods = 1, unfold = false|
-		^[in, vowel, [freqMods], [ampMods], [widthMods]].flop
-			//.postcs
-		.collect({ |inputs|
+		^[in, vowel, [freqMods], [ampMods], [widthMods]].flop.collect({ |inputs|
 			this.ar1(*(inputs ++ unfold));
 		}).unbubble;		
 	}
