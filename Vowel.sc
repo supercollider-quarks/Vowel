@@ -263,15 +263,16 @@ Vowel {
 		^this.asArray.flat
 	}
 
-	addControls {|id = "", rate = \kr|
+	addControls {|id = "", rate = \kr, lag|
 		var pairs, result;
 		 
 		result = this.class.basicNew;
+		lag = lag.asArray;
 
 		pairs = this.asKeyValuePairs.clump(2);
 		pairs.collect{|pair, i|
 			//pair.postln;
-			result.perform(pair[0].asSetter, (pair[0] ++ id).asSymbol.perform(rate, pair[1]));
+			result.perform(pair[0].asSetter, (pair[0] ++ id).asSymbol.perform(rate, pair[1], lag.wrapAt(i)));
 		};
 		
 		^result
