@@ -1,47 +1,27 @@
-//Vowel implememted jointly by Florian Grond and Till Bovermann june 2011
+// Vowel, a convenience class
+// 2010 - 2012, Florian Grond and Till Bovermann, 
 //
-//This class implementation is supported by:
-//the Ambient Intelligence groupe CITEC  http://www.techfak.uni-bielefeld.de/ags/ami  Bielefeld University
-//the Department of http://TAI-Studio.org, Media, Aalto University, Helsinki.
+// Implementation is supported by:
+// + Ambient Intelligence Group, CITEC, Bielefeld University
+//		http://www.techfak.uni-bielefeld.de/ags/ami  
+// + MediaLab Helsinki, Department of Media, Aalto University, 
+//		http://tai-studio.org
 //
-//thanx to Alberto deCampop and and Julian Rohrhuber
-
-
-// the in the formant library are taken from the Csoundmanual:
+// thanks go to Alberto deCampop and and Julian Rohrhuber
+//"/Users/tboverma/Library/Application Support/SuperCollider/Extensions/quarks/Vowel/Vowel.sc"
+// the used formant data is taken from the Csound manual:
 // http://ecmc.rochester.edu/onlinedocs/Csound/Appendices/table3.html
-// \vowel,\register, formant frequecies, formant dB, formant width
+// vowel, register, formant frequencies, formant dB, formant width
 
+// Changelog: see below
 
-// changes to Vowel
-// 18.02.2010 fg: added method save and load
-// 18.02.2010 fg: added method addFormant and removeFormant
-// 18.02.2010 fg: added method midinote rqs amps
-// 18.02.2010 fg: added method plot
-// 18.02.2010 fg: added method ampAt
-// 18.02.2010 fg: added method brightenCAmpSum
-
-// Till please look at compose, did not get it to work with midinotes for linear combination
-
-
-// changes to Vowel
-// 6.2.2010 tb: added asEvent
-// 6.2.2010 tb: moved initialization of formLib from iniClass to the actual place where it is used first
-// 6.2.2010 tb: added channel expansion, so you now can write Vowel([\a, \e], [\bass, \soprano])
-
-// changes to Formants
-// 6.2.2010 tb: added a new implementation that should be preferred to Formants:
-//	+ got rid of explicit use of freqs/amps/widths in Formants as it is not really used
-//	+ added channel expansion
-//	+ added unfold to change between summing or not summing the formants together...
-//	+ added mods parameter for freqs/widths/amps
 
 Vowel {
 	classvar formLib;
 	var <>freqs, <>dBs, <>widths;
 
-	// evaluated the first time you use it
 	*initLib{
-	// if (formLib.isNil, {	
+	// this method is evaluated the first time formLib is used
 		formLib = Library.new;
 		formLib	
 			.put( 'a', 'soprano', 'freq',[ 800, 1150, 2900, 3900, 4950 ])
@@ -146,8 +126,7 @@ Vowel {
 	
 			.put( 'u', 'counterTenor', 'freq',	[370, 630, 2750, 3000, 3400])
 			.put( 'u', 'counterTenor', 'db',		[0, -20, -23, -30, -34])
-			.put( 'u', 'counterTenor', 'bw',		[40, 60, 100, 120, 120]);		// }
-		//) // end if
+			.put( 'u', 'counterTenor', 'bw',		[40, 60, 100, 120, 120]);
 	}
 	
 	save { |path = nil, timbre = \mytimbre, register = \myregister|
@@ -237,7 +216,10 @@ Vowel {
 	
 	plot {|fmin = 0, fmax = 6000, fstep = 2, order = 1|
 	var range = {|i| (i*fstep) + fmin}!((fmax - fmin) / fstep);
-	^this.ampAt(range, order).ampdb.plot("dB (-100 to 0) / frequency ("++fmin.asString++" to "++fmax.asString++" Hz)", minval: -100, maxval: 0)
+	
+	^this.ampAt(range, order)
+		.ampdb
+		.plot("dB (-100 to 0) / frequency (% to % Hz)".format(fmin, fmax), minval: -100, maxval: 0)
 	}
 	
 	asArray { 
@@ -313,52 +295,6 @@ Vowel {
 		)
 	}
 
-/*	blend (that, freqFrac, ampFrac, widthFrac)
-	
-		blend2 allows you to blend two vowels with individual coefficients for freq, amp, width. The blending is a linear interpolation between the arrays freqs, widths and dBs.
-		that - Vowel
-		freqFrac - frequency coefficient. Default value is 0.5. range from 0.0 to 1.0
-		ampFrac - amplitude coefficient. Default value is 0.5. range from 0.0 to 1.0
-		widthFrac - bandwidth coefficient. Default value is 0.5. range from 0.0 to 1.0
-		
-		~v1 = Vowel(\a, \bass)
-		~v2 = Vowel(\i, \soprano)
-		
-		~v1.blend1(~v2, 0)
-		~v1.blend1(~v2, 0.5)
-		~v1.blend1(~v2, 0.1, 0.5, 0.8)
-
-		in the following example you''l notice the the biggest contributioin to the recognizability of a vowel are first the frequencies (MouseX) and second the amplitudes (MouseY).  
-		The bandwidths do not contribute much (SinOsc):
-
-		{ Formants.ar(150,  Vowel(\a, \bass).blend1(Vowel(\u, \bass), MouseX.kr(0,1), MouseY.kr(0,1), SinOsc.kr(0.5, 0, 0.5, 0.5) ) ) * 0.1  }.play
-		{ Formants.ar(150,  Vowel(\e, \bass).blend1(Vowel(\i, \bass), MouseX.kr(0,1), MouseY.kr(0,1), SinOsc.kr(0.5, 0, 0.5, 0.5) ) ) * 0.1  }.play
-		{ Formants.ar(150,  Vowel(\i, \bass).blend1(Vowel(\o, \bass), MouseX.kr(0,1), MouseY.kr(0,1), SinOsc.kr(0.5, 0, 0.5, 0.5) ) ) * 0.1  }.play
-*/
-
-/*	blendOneFac {|that, blendFrac=0.5|
-		var vowelBlend;
-		vowelBlend = this.class.new;
-
-		vowelBlend.freqs 	= blend(this.midinotes,  that.midinotes, blendFrac).midicps; 
-		vowelBlend.dBs 	= blend(this.dBs,    that.dBs, blendFrac); 
-		vowelBlend.widths 	= blend(this.widths, that.widths, blendFrac); 
-
-		^vowelBlend;
-	}	
-
-	blendThreeFac {|that, freqFrac = 0.5, dbFrac = 0.5, widthFrac = 0.5|
-		var vowelBlend;
-		vowelBlend = this.class.new;
-
-		vowelBlend.freqs 	= blend(this.midinotes,  that.midinotes, freqFrac).midicps; 
-		vowelBlend.dBs 	= blend(this.dBs,    that.dBs, dbFrac); 
-		vowelBlend.widths 	= blend(this.widths, that.widths, widthFrac); 
-
-		^vowelBlend;
-	}
-*/
-
 	brightenRel {|bright = 1, refFormant = 0|
 		var refFormat_dB = this.dBs[refFormant];
 		this.dBs =  (this.dBs * bright);
@@ -427,94 +363,6 @@ Vowel {
 	storeArgs { ^this.asArray }
 }
 
-// Here you find some convenience Pseudo Ugen Classes,
-// to be used together with Vowel
-
-Formants {
-	*ar1 {|baseFreq = 100, vowel, freqMods = 1, ampMods = 1, widthMods = 1, unfold = false|
-		var freqs, dBs, amps, widths;
-		var out; 
-		
-		#freqs, dBs, widths = vowel.asArray;
-	
-		freqs = freqs * freqMods;
-		amps = dBs.dbamp * ampMods;
-		widths = widths * widthMods;
-	
-		out = [freqs, widths, amps].flop.collect{ |args| 
-			Formant.ar(baseFreq, *args); 
-		}.flop;
-		
-		// don't mix if unfold is true
-		^(unfold.if({ out; },{ out.collect(_.sum); })).unbubble; 
-		// unbubble for correct channel expansion behaviour, if only one baseFreq is given
-	}
-	
-	*ar {|baseFreq = 100, vowel, freqMods = 1, ampMods = 1, widthMods = 1, unfold = false|
-		^[baseFreq, vowel, [freqMods], [ampMods], [widthMods]].flop.collect({ |inputs|
-			this.ar1(*(inputs ++ unfold));
-		}).unbubble;		
-	}
-}
-
-
-/*
-Formants1 {
-	*ar1 {|baseFreq = 100, vowel, freqMods = 1, ampMods = 1, widthMods = 1, unfold = false|
-		var freqs, dBs, amps, widths;
-		var out; 
-		
-		#freqs, dBs, widths = vowel.asArray;
-	
-		freqs = freqs * freqMods;
-		amps = dBs.dbamp * ampMods;
-		widths = widths * widthMods;
-	
-		out = [baseFreq, freqs, widths, dBs].flop.collect{ |args| 
-			Formant.ar(args[0], args[1], args[2], args[3].dbamp) 
-		};
-
-		// don't mix if unfold is true
-		^unfold.if({out},{out.sum})
-	}
-	
-	*ar {|baseFreq = 100, vowel, freqMods = 1, ampMods = 1, widthMods = 1, unfold = false|
-		^[baseFreq, vowel, [freqMods], [ampMods], [widthMods]].flop
-			.postcs
-		.collect({ |inputs|
-			this.ar1(*(inputs ++ unfold));
-		}).unbubble;	
-	}
-}
-*/
-
-BPFStack {
-	*ar1 {|in, vowel, freqMods = 1, ampMods = 1, widthMods = 1, unfold = false|
-		var freqs, dBs, amps, widths;
-		var out; 
-		
-		#freqs, dBs, widths = vowel.asArray;
-	
-		freqs = freqs * freqMods;
-		amps = dBs.dbamp * ampMods;
-		widths = (widths * widthMods).reciprocal;
-	
-		out = [freqs, widths, amps].flop.collect{ |args| 
-			BPF.ar(in, *args); 
-		}.flop;
-		
-		// don't mix if unfold is true
-		^(unfold.if({ out; },{ out.collect(_.sum); })).unbubble; 
-		// unbubble for correct channel expansion behaviour, if only one baseFreq is given
-	}
-	
-	*ar {|in, vowel, freqMods = 1, ampMods = 1, widthMods = 1, unfold = false|
-		^[in, vowel, [freqMods], [ampMods], [widthMods]].flop.collect({ |inputs|
-			this.ar1(*(inputs ++ unfold));
-		}).unbubble;		
-	}
-}
-
 
 + Object {
 	
@@ -527,6 +375,30 @@ BPFStack {
 	
 }
 
-/*
-Helper(Vowel, Document.current.path.copyRange(0, Document.current.path.size-4)++"_.html")
-*/
+
+
+
+// Changelog
+
+// Till please look at compose, did not get it to work with midinotes for linear combination
+
+
+// changes to Vowel
+// 02.03.2012 tb: adoption of the helpfile to the new schelp system
+// 02.03.2012 tb: removed commented code that stayed in the file for too long already.
+// 18.02.2010 fg: added method save and load
+// 18.02.2010 fg: added method addFormant and removeFormant
+// 18.02.2010 fg: added method midinote rqs amps
+// 18.02.2010 fg: added method plot
+// 18.02.2010 fg: added method ampAt
+// 18.02.2010 fg: added method brightenCAmpSum
+// 06.2.2010 tb: added asEvent
+// 06.2.2010 tb: moved initialization of formLib from iniClass to the actual place where it is used first
+// 06.2.2010 tb: added channel expansion, so you now can write Vowel([\a, \e], [\bass, \soprano])
+
+// changes to Formants
+// 6.2.2010 tb: added a new implementation that should be preferred to Formants:
+//	+ got rid of explicit use of freqs/amps/widths in Formants as it is not really used
+//	+ added channel expansion
+//	+ added unfold to change between summing or not summing the formants together...
+//	+ added mods parameter for freqs/widths/amps
