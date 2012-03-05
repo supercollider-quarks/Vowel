@@ -62,7 +62,6 @@ code::
 {Formants.ar(100, Vowel(\e, [\bass,\alto])) * 0.1 }.play
 {Formants.ar(100, Vowel([\e, \o], [\bass,\alto])) * 0.1 }.play
 ::
-::
 
 METHOD:: basicNew
 You can also explicitly set the formants
@@ -111,7 +110,6 @@ Vowel.compose([\a], [\tenor, \counterTenor, \soprano], [1, 4, 2].normalizeSum);
 Formants.ar(50 + 300.rand, v) * 0.1; 
 }.play;
 )
-::
 ::
 
 INSTANCEMETHODS::
@@ -265,7 +263,6 @@ x.setn(*([\freq, exprand(100, 1000)] ++ Vowel(\u, \soprano).asKeyValuePairs));
 x.setn(*([\freq, exprand(100, 500)] ++ Vowel(\e, \bass).asKeyValuePairs));
 x.setn(*([\freq, exprand(400, 1000)] ++ Vowel(\a, \soprano).asKeyValuePairs));
 ::
-::
 
 METHOD:: +
 plus
@@ -331,7 +328,6 @@ Vowel().brightenRel(1.5).dBs.postln;
 // refFormant = 4 loud on the right
 {Formants.ar(100, Vowel().brightenRel(MouseX.kr(0, 2), 4 )) * 0.1}.play
 ::
-::
 
 METHOD:: brightenLin
 allows to lift the upper formants by multiplying their dBs. the sum of all dBs remains constant.
@@ -359,7 +355,6 @@ Vowel().brightenLin( 1).dBs.postln;
 // refFormant = 4 loud on the right
 {Formants.ar(100, Vowel().brightenLin(MouseX.kr(0, 20), 4 )) * 0.1}.play
 ::
-::
 
 
 METHOD:: brightenExp
@@ -370,6 +365,7 @@ argument:: bright
 coefficient to brighten the vowel. Typical ranges are from 1 (no change) to 3.
 
 discussion::
+code::
 Vowel().brightenExp(1).dBs.postln; 
 Vowel().brightenExp(0.1).dBs.postln;
 Vowel().brightenExp(1.5).dBs.postln;
